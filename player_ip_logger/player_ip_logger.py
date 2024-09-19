@@ -43,7 +43,9 @@ def extract_player_info(content: str):
     pattern = r'(\w+)\[/(.*?)\] logged in with entity id|Disconnecting (\w+) \(/(.*?)\)|(\w+) \(/(.*?)\) lost connection'
     match = re.search(pattern, content)
     if match:
-        player_name, player_ip = match.groups()
+        groups = match.groups()
+        player_name = next((group for group in groups if group is not None), None)
+        player_ip = next((group for group in groups[1:] if group is not None), None)
         if player_ip == "/local":
             return None, None
         return player_name, player_ip.split(":")[0]
