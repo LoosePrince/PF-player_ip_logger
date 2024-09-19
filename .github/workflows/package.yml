@@ -2,7 +2,7 @@ name: Package on Update
 
 on:
   push:
-分支:
+    branches:
       - '**'  # 触发所有分支的推送事件
 
 jobs:
