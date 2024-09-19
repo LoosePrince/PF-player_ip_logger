@@ -9,7 +9,7 @@ def on_load(server: PluginServerInterface, old):
     server.logger.info("Player IP Logger 插件正在加载...")
 
     global config
-    config = server.load_config_simple("config.yml", {})
+    config = server.load_config_simple("config.json", {})
 
     server.logger.info("Player IP Logger 插件已成功加载。")
 
