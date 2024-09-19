@@ -35,8 +35,10 @@ def handle_player_login(server: PluginServerInterface, info: Info):
 def extract_player_info(content: str):
     # 处理格式: Shusao[/127.0.0.1:25567] logged in with entity id 359776
     # 机器人格式: bot[/local] logged in with entity id 35977
+    # 特殊格式: Disconnecting Shusao (/127.0.0.1:25567)
+    # 特殊格式: Shusao (/127.0.0.1:25567) lost connection
 
-    pattern = r'(\w+)\[/(.*?)\] logged in with entity id'
+    pattern = r'(\w+)\[/(.*?)\] logged in with entity id|Disconnecting (\w+) \(/(.*?)\)|(\w+) \(/(.*?)\) lost connection'
     match = re.search(pattern, content)
     if match:
         player_name, player_ip = match.groups()
