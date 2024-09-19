@@ -3,17 +3,20 @@ import re
 
 from mcdreforged.api.all import *
 
-config: dict = {}
+config = None
 
 def on_load(server: PluginServerInterface, old):
     server.logger.info("Player IP Logger 插件正在加载...")
 
     global config
-    config = server.load_config_simple("config.json", {})
-
+    config = server.load_config_simple("config.json", {"users": {}})
+    print(config)
     server.logger.info("Player IP Logger 插件已成功加载。")
 
 def on_info(server: PluginServerInterface, info: Info):
+    if config is None:
+        return
+    
     if "logged in with entity id" in info.content \
         or "lost connection" in info.content \
         or "Disconnecting" in info.content:
@@ -25,11 +28,11 @@ def handle_player_login(server: PluginServerInterface, info: Info):
     
     # is player
     if player_name and player_ip:
-        if player_name not in config:
-            config[player_name] = []
+        if player_name not in config["users"]:
+            config["users"][player_name] = []
         
-        if player_ip not in config[player_name]:
-            config[player_name].append(player_ip)
+        if player_ip not in config["users"][player_name]:
+            config["users"][player_name].append(player_ip)
 
             # Save the updated IP storage to the config file
             server.save_config_simple(config)
@@ -51,14 +54,15 @@ def extract_player_info(content: str):
         return player_name, player_ip.split(":")[0]
     return None, None
 
-def on_unload(server: PluginServerInterface):
-    server.save_config_simple(config)
-
 #############################################################
 # API
 #############################################################
 def is_player(name: str)->bool:
-    return name in config
+    if config is not None:
+        return name in config["users"]
+    return False
 
 def get_player_ips(name: str)->list:
-    return config.get(name, [])
+    if config is not None:
+        return config["users"].get(name, [])
+    return []
