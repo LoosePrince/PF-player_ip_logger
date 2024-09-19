@@ -1,0 +1,41 @@
+name: Package on Update
+
+on:
+  push:
+    branches:
+      - '**'  # 触发所有分支的推送事件
+    paths:
+      - 'mcdreforged.plugin.json'
+      - 'player_ip_logger/**'  # 监控 player_ip_logger 文件夹及其子文件夹
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up zip
+      run: sudo apt-get install zip
+
+    - name: Create mcdr zip package
+      run: |
+        # Check if the file or folder exists before creating the zip
+        if [ -f "mcdreforged.plugin.json" ] || [ -d "player_ip_logger" ]; then
+          zip -r player_ip_logger.mcdr mcdreforged.plugin.json player_ip_logger || exit 0
+          # List files to confirm the zip file was created
+          ls -l
+        else
+          echo "No relevant files or directories found to package."
+        fi
+
+    - name: Commit and push mcdr package
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git add player_ip_logger.mcdr
+        git commit -m "Add player_ip_logger.mcdr package" || echo "No changes to commit"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
