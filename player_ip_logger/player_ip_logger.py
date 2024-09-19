@@ -47,6 +47,7 @@ def extract_player_info(content: str):
         if player_ip == "/local":
             return None, None
         return player_name, player_ip.split(":")[0]
+    return None, None
 
 def on_unload(server: PluginServerInterface):
     server.save_config_simple(config)
