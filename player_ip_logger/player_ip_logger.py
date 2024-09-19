@@ -14,7 +14,9 @@ def on_load(server: PluginServerInterface, old):
     server.logger.info("Player IP Logger 插件已成功加载。")
 
 def on_info(server: PluginServerInterface, info: Info):
-    if "logged in with entity id" in info.content:
+    if "logged in with entity id" in info.content \
+        or "lost connection" in info.content \
+        or "Disconnecting" in info.content:
         handle_player_login(server, info)
 
 def handle_player_login(server: PluginServerInterface, info: Info):
