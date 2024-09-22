@@ -1,1 +1,59 @@
+name: Package on Update and Push to Main
 
+on:
+  push:
+    branches:
+      - '**'  # 监控所有分支的推送事件
+    paths:
+      - 'mcdreforged.plugin.json'
+      - 'player_ip_logger/**'  # 监控 player_ip_logger 文件夹及其子文件夹
+
+jobs:
+  package_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}  # 检出当前推送的分支
+
+    - name: Set up zip
+      run: sudo apt-get install zip
+
+    - name: Create and save mcdr zip package in current branch
+      run: |
+        # Check if文件或文件夹存在，再进行压缩
+        if [ -f "mcdreforged.plugin.json" ] || [ -d "player_ip_logger" ]; then
+          zip -r player_ip_logger.mcdr mcdreforged.plugin.json player_ip_logger
+          # 确认 zip 文件是否创建
+          ls -l
+        else
+          echo "没有找到需要打包的文件或目录。"
+        fi
+
+    - name: Push changes to main branch
+      run: |
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        
+        # 提交打包的文件到当前分支
+        git add player_ip_logger.mcdr mcdreforged.plugin.json
+        git commit -m "Save mcdr package in branch ${{ github.ref_name }}" || echo "No changes to commit"
+        git push origin ${{ github.ref_name }}
+        
+        # 切换到主线分支
+        git fetch origin main
+        git checkout main
+        
+        # 将打包好的文件从当前分支合并到主线
+        git checkout ${{ github.ref_name }} -- player_ip_logger.mcdr mcdreforged.plugin.json
+        
+        # 添加并提交到主线
+        git add player_ip_logger.mcdr mcdreforged.plugin.json
+        git commit -m "Update mcdr package and mcdreforged.plugin.json from branch ${{ github.ref_name }}"
+        
+        # 推送更改到主线
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
