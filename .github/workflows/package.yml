@@ -23,13 +23,13 @@ jobs:
 
     - name: Create mcdr zip package
       run: |
-        # Check if the file or folder exists before creating the zip
+        # Check if文件或文件夹存在，再进行压缩
         if [ -f "mcdreforged.plugin.json" ] || [ -d "player_ip_logger" ]; then
           zip -r player_ip_logger.mcdr mcdreforged.plugin.json player_ip_logger || exit 0
-          # List files to confirm the zip file was created
+          # 确认 zip 文件是否创建
           ls -l
         else
-          echo "No relevant files or directories found to package."
+          echo "没有找到需要打包的文件或目录。"
         fi
 
     - name: Push changes to main branch
@@ -37,14 +37,17 @@ jobs:
         git config user.name "github-actions"
         git config user.email "actions@github.com"
         
+        # 将当前更改存入 stash
+        git stash
+        
         # 切换到主线分支
         git fetch origin main
         git checkout main
-
-        # 从当前推送的分支合并到主线
-        git merge --no-ff ${{ github.ref_name }} -m "Merge branch '${{ github.ref_name }}' into main"
         
-        # 将打包文件和 mcdreforged.plugin.json 推送到主线
+        # 恢复之前存入 stash 的更改
+        git stash pop
+        
+        # 添加文件并提交到主线
         git add player_ip_logger.mcdr mcdreforged.plugin.json
         git commit -m "Update mcdr package and mcdreforged.plugin.json from branch ${{ github.ref_name }}" || echo "No changes to commit"
         
