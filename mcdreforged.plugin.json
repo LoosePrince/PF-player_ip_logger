@@ -1,0 +1,15 @@
+{
+	"id": "player_ip_logger",
+	"version": "1.1.0",
+	"name": "Player IP Logger",
+	"description": {
+		"en_us": "Record player IP addresses",
+		"zh_cn": "记录玩家IP地址"
+	},
+	"author": [
+		"LoosePrince",
+		"XueK66"
+	],
+	"link": "https://github.com/LoosePrince/PF-player_ip_logger",
+	"dependencies": {}
+}
