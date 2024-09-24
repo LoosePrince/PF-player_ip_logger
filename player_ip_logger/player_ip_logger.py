@@ -60,26 +60,36 @@ def extract_player_info(content: str):
 # API
 #############################################################
 def ban_ip(ip: str):
-    if config is not None:
+    if config:
         game_server.execute("ban-ip " + ip)
 
 def ban_player(name: str):
-    if config is not None:
+    if config:
         ips = get_player_ips(name)
         for ip in ips:
             ban_ip(ip)
 
 def get_player_ips(name: str)->list:
-    if config is not None:
+    if config:
         return config["users"].get(name, [])
     return []
 
 def get_player_names(ip: str)->list:
-    if config is not None:
+    if config:
         return [name for name, ips in config["users"].items() if ip in ips]
     return []
 
 def is_player(name: str)->bool:
-    if config is not None:
+    if config:
         return name in config["users"]
     return False
+
+def unban_ip(ip: str):
+    if config and game_server:
+        game_server.execute("pardon-ip " + ip)
+
+def unban_player(name: str):
+    if config and game_server:
+        ips = get_player_ips(name)
+        for ip in ips:
+            unban_ip(ip)
