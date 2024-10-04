@@ -29,6 +29,9 @@ def on_load(server: PluginServerInterface, old):
                 Text('player/ip').runs(pardon)
             )
         )
+        .then(
+            Literal('list').runs(print_list)
+        )
     )
 
     server.register_help_message('!!ip ban <player/ip>','禁止玩家登录')
@@ -59,6 +62,14 @@ def handle_player_login(server: PluginServerInterface, info: Info):
 
             # Save the updated IP storage to the config file
             server.save_config_simple(config)
+
+        if player_name in config['banned_player'] \
+            and player_ip not in config['banned_ips']:
+            ban_ip(player_ip)
+
+        if player_ip in config['banned_ips'] \
+            and player_name not in config['banned_player']:
+            ban_player(player_name)
 
 def extract_player_info(content: str):
     # 处理格式: Shusao[/127.0.0.1:25567] logged in with entity id 359776
@@ -101,6 +112,16 @@ def is_player(name: str)->bool:
         return name in config["users"]
     return False
 
+def print_list(src, *args)->None:
+    banned_ips = config.get("banned_ips")
+    banned_players = config.get("banned_player")
+
+    template = "=== {} ===\n{}\n"
+    ips_string = template.format("banned ip", ", ".join(banned_ips)) if banned_ips else "no banned ip\n"
+    players_string = template.format("banned player", ", ".join(banned_players)) if banned_players else "no banned player\n"
+    response =  ips_string + players_string
+    src.reply(response)
+
 #############################################################
 # ban/unban API
 #############################################################
@@ -134,9 +155,13 @@ def pardon(src, ctx)->None:
 
 def unban_ip(ip: str)->None:
     if config and game_server:
-        game_server.execute("pardon-ip " + ip)
         if ip in config.get("banned_ips", []):
             config['banned_ips'].remove(ip)
+        game_server.execute("pardon-ip " + ip)
+        
+        for banned_player in config.get("banned_player", []):
+            if all([i not in config['banned_ips'] for i in config['users'][banned_player]]):
+                config["banned_player"].remove(banned_player)
 
 def unban_player(name: str)->None:
     if config and game_server:
