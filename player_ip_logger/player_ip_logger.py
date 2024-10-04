@@ -2,6 +2,7 @@
 import re
 
 from mcdreforged.api.all import *
+from mcdreforged.api.command import SimpleCommandBuilder, Integer, Text, GreedyText
 
 config = None
 game_server: PluginServerInterface = None
@@ -12,6 +13,26 @@ def on_load(server: PluginServerInterface, old):
     global config, game_server
     game_server = server
     config = server.load_config_simple("config.json", {"users": {}, "banned_player": [], "banned_ips": []})
+
+    server.register_command(
+        Literal("!!ip")
+        .requires(lambda src: src.has_permission(3))
+        .then(
+            Literal('ban')
+            .then(
+                Text('player/ip').runs(ban)
+            )
+        )
+        .then(
+            Literal('pardon')
+            .then(
+                Text('player/ip').runs(pardon)
+            )
+        )
+    )
+
+    server.register_help_message('!!ip ban <player/ip>','禁止玩家登录')
+    server.register_help_message('!!ip pardon <player/ip>', '解禁玩家')
 
     server.logger.info("Player IP Logger 插件已成功加载。")
 
@@ -83,6 +104,13 @@ def is_player(name: str)->bool:
 #############################################################
 # ban/unban API
 #############################################################
+def ban(src, ctx)->None:
+    player = ctx['player/ip']
+    if is_ip(player):
+        ban_ip(player)
+    else:
+        ban_player(player)
+
 def ban_ip(ip: str)->None:
     if config:
         game_server.execute("ban-ip " + ip)
@@ -97,6 +125,13 @@ def ban_player(name: str)->None:
         if name not in config.get('banned_player'):
             config['banned_player'].append(name)
 
+def pardon(src, ctx)->None:
+    player = ctx['player/ip']
+    if is_ip(player):
+        unban_ip(player)
+    else:
+        unban_player(player)
+
 def unban_ip(ip: str)->None:
     if config and game_server:
         game_server.execute("pardon-ip " + ip)
@@ -110,3 +145,9 @@ def unban_player(name: str)->None:
             unban_ip(ip)
         if name in config.get("banned_player", []):
             config['banned_player'].remove(name)
+
+#############################################################
+# helper
+#############################################################
+def is_ip(string:str)->bool:
+    return '.' in string
