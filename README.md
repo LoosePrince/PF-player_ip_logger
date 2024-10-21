@@ -1,6 +1,11 @@
 ![PF-player_ip_logger](https://socialify.git.ci/LoosePrince/PF-player_ip_logger/image?description=1&font=Inter&language=1&name=1&pattern=Floating%20Cogs&theme=Light)
 # Player IP Logger for MCDReforged
 
+[![仓库大小](https://img.shields.io/github/repo-size/LoosePrince/PF-player_ip_logger?style=flat-square&label=仓库占用)](/) 
+[![最新版](https://img.shields.io/github/v/release/LoosePrince/PF-player_ip_logger?style=flat-square&label=最新版)](https://github.com/LoosePrince/PF-player_ip_logger/releases/latest)
+[![总下载量](https://img.shields.io/github/downloads/LoosePrince/PF-player_ip_logger/total?style=flat-square&label=下载量)](https://github.com/LoosePrince/PF-player_ip_logger/releases)
+[![最新发布下载量](https://img.shields.io/github/downloads/LoosePrince/PF-player_ip_logger/latest/total?style=flat-square&label=最新版本下载量)](https://github.com/LoosePrince/PF-player_ip_logger/releases/latest)
+
 #### 插件简介
 **Player IP Logger** 是一款为 MCDReforged (MCDR) 开发的插件，主要功能是记录玩家的 IP 地址。该插件通过监控玩家的登录和断开连接事件，记录玩家对应的 IP 地址，并提供便捷的 API 供服务器管理员进行查询、封禁或解禁操作。
 
