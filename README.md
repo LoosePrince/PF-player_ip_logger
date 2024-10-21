@@ -2,16 +2,20 @@
 # Player IP Logger for MCDReforged
 
 #### 插件简介
-**Player IP Logger** 是一款为 MCDReforged (MCDR) 开发的插件，主要功能是记录玩家的 IP 地址。该插件能够追踪玩家的登录和断线信息，并将玩家对应的 IP 地址保存在配置文件中。你可以随时通过插件 API 查询玩家的 IP 地址历史，方便进行服务器管理和审查。
+**Player IP Logger** 是一款为 MCDReforged (MCDR) 开发的插件，主要功能是记录玩家的 IP 地址。该插件通过监控玩家的登录和断开连接事件，记录玩家对应的 IP 地址，并提供便捷的 API 供服务器管理员进行查询、封禁或解禁操作。
 
 #### 功能
-- **自动记录玩家 IP**: 通过监控玩家的登录和断线事件，自动捕获并记录 IP 地址。
-- **IP 地址存储**: 保存玩家的所有历史 IP 地址，避免重复记录。
-- **支持 API 查询**: 插件提供了简单的 API 以便其他插件调用，例如检查玩家是否存在记录以及获取玩家的 IP 地址列表。
+
+- **自动记录玩家 IP**: 插件会自动监控玩家的登录和断线信息，捕获并保存 IP 地址。
+- **封禁与解禁功能**: 支持通过命令封禁或解禁玩家或 IP 地址，适用于服务器管理。
+- **多格式支持**: 支持多种日志格式解析，确保不同场景下都能正确提取玩家的 IP 地址。
+- **IP 地址存储**: 将玩家所有历史 IP 地址保存到配置文件中，避免重复记录。
+- **支持 API 调用**: 提供了多种 API，方便插件调用，或让管理员查询玩家的 IP 信息。
 
 #### 安装与配置
-1. **安装**: 将插件放入 MCDReforged 插件目录中。
-2. **配置**: 插件会在首次运行时生成一个 `config.json` 文件，包含用户的 IP 记录。该文件格式如下：
+1. **安装**: 将插件文件放入 MCDReforged 的 `plugins` 目录中，启动服务器。
+2. **配置**: 插件会自动生成一个 `config.json` 配置文件，存储用户和 IP 记录。文件格式如下：
+
     ```json
     {
         "users": {
@@ -19,11 +23,20 @@
                 "玩家的IP1",
                 "玩家的IP2"
             ]
-        }
+        },
+        "banned_player": [],
+        "banned_ips": []
     }
     ```
 
+#### 命令
+
+- **!!ip ban `<player/ip>`**: 封禁指定玩家或 IP。
+- **!!ip pardon `<player/ip>`**: 解禁指定玩家或 IP。
+- **!!ip list**: 显示当前封禁的玩家和 IP。
+
 #### 事件处理
+
 - 当玩家登录或断开连接时，插件会自动解析相关日志信息，并提取玩家名称和 IP 地址。
 - 如果玩家的 IP 地址尚未记录，将其添加到配置文件中，并自动保存。
 
@@ -34,7 +47,7 @@
 - `玩家名 (/IP地址:端口) lost connection`
 
 #### 使用
-插件会自动运行并监控日志，不需要任何配置。
+插件会自动运行并自动监听玩家的登录与断开事件，并记录 IP 地址，不需要任何配置。管理员可以快速对玩家或 IP 进行封禁或解禁操作，或者查看封禁列表。
 
 ---
 
@@ -63,18 +76,38 @@
    ips = get_player_ips("Shusao")
    print(f"Shusao 的 IP 历史: {ips}")
    ```
+
+3. **get_player_names(ip: str) -> list**
+
+   - **描述**: 获取使用该 IP 地址的所有玩家名称。
+   - **参数**: 
+     - `ip`：IP地址。
+
+   - **返回**: 包含玩家名称的列表。
+
+4. **ban(src, ctx)**
+   - **描述**: 封禁指定玩家或 IP 地址。
+   - **参数**: 
+     - 玩家ID 或 IP 地址。
+
+5. **pardon(src, ctx)**
+   - **描述**: 解禁指定玩家或 IP 地址。
+   - **参数**: 
+     - 玩家ID 或 IP 地址。
+
 ### 使用此API的插件
+
 - [PF-GUGUbot](https://github.com/LoosePrince/PF-GUGUBot) : MCDR-GUGUBot QQ机器人 群聊管理 聊天互转
 >  用于区分真实玩家
 
 ---
 
 ### 贡献
-欢迎提交问题或贡献代码！
+如果发现问题，或希望贡献代码，欢迎在 GitHub 提交 Issue 或 Pull Request。
 
-- 插件初版：树梢（[LoosePrince](https://github.com/LoosePrince)）、[ChatGPT](https://chatgpt.com/)
-- 技术支持：雪开（[XueK66](https://github.com/XueK66)）
-- 文档编辑：树梢（[LoosePrince](https://github.com/LoosePrince)）、[ChatGPT](https://chatgpt.com/)
+- 插件初版提供: 树梢（[LoosePrince](https://github.com/LoosePrince)）
+- 技术支持: 雪开（[XueK66](https://github.com/XueK66)）
+- 文档编写: 树梢（[LoosePrince](https://github.com/LoosePrince)）、 雪开（[XueK66](https://github.com/XueK66)）
 
 ---
 
