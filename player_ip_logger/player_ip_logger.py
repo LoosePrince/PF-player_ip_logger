@@ -123,9 +123,11 @@ def is_player(name: str)->bool:
     return False
 
 def print_list(src, *args)->None:
-    banned_ips = config.get("banned_ips")
-    banned_players = config.get("banned_player")
-
+    banned_ips = config.get("banned_ips", [])
+    banned_ips = [i for i in banned_ips if i]
+    banned_players = config.get("banned_player", [])
+    banned_players = [i for i in banned_players if i]
+    
     template = "=== {} ===\n{}\n"
     ips_string = template.format("banned ip", ", ".join(banned_ips)) if banned_ips else "no banned ip\n"
     players_string = template.format("banned player", ", ".join(banned_players)) if banned_players else "no banned player\n"
