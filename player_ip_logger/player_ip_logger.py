@@ -79,7 +79,8 @@ def handle_player_login(server: PluginServerInterface, info: Info):
         
         # add event for other plugin to report 
         # Currently won't report banned player & bot
-        server.dispatch_event(LiteralEvent("player_ip_logger.player_login"), (player_name, player_ip))
+        if "logged in with entity id" in info.content:
+            server.dispatch_event(LiteralEvent("player_ip_logger.player_login"), (player_name, player_ip))
 
 def extract_player_info(content: str):
     # 处理格式: Shusao[/127.0.0.1:25567] logged in with entity id 359776
