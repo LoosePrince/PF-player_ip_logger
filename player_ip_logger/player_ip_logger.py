@@ -54,22 +54,32 @@ def handle_player_login(server: PluginServerInterface, info: Info):
     
     # is player
     if player_name and player_ip:
+        # add new player info
         if player_name not in config["users"]:
             config["users"][player_name] = []
         
+        # add new ip
         if player_ip not in config["users"][player_name]:
             config["users"][player_name].append(player_ip)
 
-            # Save the updated IP storage to the config file
-            server.save_config_simple(config)
+        # Save the updated IP storage to the config file
+        server.save_config_simple(config)
 
+        # record banned player's new ip
         if player_name in config['banned_player'] \
             and player_ip not in config['banned_ips']:
             ban_ip(player_ip)
+            return
 
+        # record player's name for banned ip
         if player_ip in config['banned_ips'] \
             and player_name not in config['banned_player']:
             ban_player(player_name)
+            return
+        
+        # add event for other plugin to report 
+        # Currently won't report banned player & bot
+        server.dispatch_event("player_ip_logger.player_login", (player_name, player_ip))
 
 def extract_player_info(content: str):
     # 处理格式: Shusao[/127.0.0.1:25567] logged in with entity id 359776

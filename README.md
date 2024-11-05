@@ -113,6 +113,19 @@
    - **参数**: 
      - 玩家IP。
 
+### API 开发(事件)
+
+1. **player_ip_logger.player_login**
+   - **描述**: 玩家登录时分发 `player_ip_logger.player_login` 事件，便于其他插件上报信息
+   - **样例**:
+      ```python
+      def do_something(server: PluginServerInterface, player_name:str, player_ip:str):
+          pass
+
+      server.register_event_listener('player_ip_logger.player_login', do_something)
+      ```
+
+
 ### 使用此API的插件
 
 - [PF-GUGUbot](https://github.com/LoosePrince/PF-GUGUBot) : MCDR-GUGUBot QQ机器人 群聊管理 聊天互转

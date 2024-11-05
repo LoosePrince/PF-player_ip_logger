@@ -1,6 +1,6 @@
 {
 	"id": "player_ip_logger",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"name": "Player IP Logger",
 	"description": {
 		"en_us": "Record player IP addresses",
