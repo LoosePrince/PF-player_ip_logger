@@ -131,6 +131,9 @@
 - [PF-GUGUbot](https://github.com/LoosePrince/PF-GUGUBot) : MCDR-GUGUBot QQ机器人 群聊管理 聊天互转
 >  用于区分真实玩家
 
+- [IPLocation](https://github.com/Mooling0602/IPLocation-MCDR) : 在玩家上线时查询并显示IP归属地。
+>  获取玩家IP
+
 ---
 
 ### 贡献
