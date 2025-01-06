@@ -12,7 +12,7 @@ def on_load(server: PluginServerInterface, old):
 
     global config, game_server
     game_server = server
-    config = server.load_config_simple("config.json", {"users": {}, "banned_player": [], "banned_ips": []})
+    config = server.load_config_simple("config.json", {"player_name_regex": r".\w+|\w+", "users": {}, "banned_player": [], "banned_ips": []})
 
     server.register_command(
         Literal("!!ip")
@@ -88,7 +88,8 @@ def extract_player_info(content: str):
     # 特殊格式: Disconnecting Shusao (/127.0.0.1:25567)
     # 特殊格式: Shusao (/127.0.0.1:25567) lost connection
 
-    pattern = r'(\w+)\[/(.*?)\] logged in with entity id|Disconnecting (\w+) \(/(.*?)\)|(\w+) \(/(.*?)\) lost connection'
+    regex = config["player_name_regex"]
+    pattern = rf'({regex})\[/(.*?)\] logged in with entity id|Disconnecting (\w+) \(/(.*?)\)|(\w+) \(/(.*?)\) lost connection'
     match = re.search(pattern, content)
     if match:
         groups = match.groups()
