@@ -174,7 +174,7 @@ def unban_ip(ip: str)->None:
         game_server.execute("pardon-ip " + ip)
         
         for banned_player in config.get("banned_player", []):
-            if all([i not in config['banned_ips'] for i in config['users'][banned_player]]):
+            if all([i not in config['banned_ips'] for i in config['users'].get(banned_player, [])]):
                 config["banned_player"].remove(banned_player)
 
 def unban_player(name: str)->None:
