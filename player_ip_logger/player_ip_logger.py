@@ -151,6 +151,7 @@ def ban_ip(ip: str)->None:
         game_server.execute("ban-ip " + ip)
         if ip not in config.get('banned_ips'):
             config['banned_ips'].append(ip)
+            game_server.save_config_simple(config)
 
 def ban_player(name: str)->None:
     if config:
@@ -159,6 +160,7 @@ def ban_player(name: str)->None:
             ban_ip(ip)
         if name not in config.get('banned_player'):
             config['banned_player'].append(name)
+            game_server.save_config_simple(config)
 
 def pardon(src, ctx)->None:
     player = ctx['player/ip']
@@ -176,6 +178,7 @@ def unban_ip(ip: str)->None:
         for banned_player in config.get("banned_player", []):
             if all([i not in config['banned_ips'] for i in config['users'].get(banned_player, [])]):
                 config["banned_player"].remove(banned_player)
+        game_server.save_config_simple(config)
 
 def unban_player(name: str)->None:
     if config and game_server:
@@ -184,6 +187,7 @@ def unban_player(name: str)->None:
             unban_ip(ip)
         if name in config.get("banned_player", []):
             config['banned_player'].remove(name)
+        game_server.save_config_simple(config)
 
 #############################################################
 # helper
