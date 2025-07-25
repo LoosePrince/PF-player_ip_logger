@@ -136,6 +136,9 @@
 - [IPLocation](https://github.com/Mooling0602/IPLocation-MCDR) : 在玩家上线时查询并显示IP归属地。
     >  获取玩家IP
 
+- [NDP](https://github.com/No-Danger-Player-Project/NDP-MCDR) : NDP联合封禁系统客户端
+    >  获取玩家IP
+
 ---
 
 ### 贡献
